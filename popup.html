@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Host Catalog</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <h1>Host Catalog</h1>
+    <span id="status" class="status idle">Idle</span>
+  </header>
+
+  <section class="controls">
+    <button id="startBtn">Start capture</button>
+    <button id="stopBtn" disabled>Stop capture</button>
+    <button id="clearBtn">Clear</button>
+  </section>
+
+  <section class="summary" id="summary" hidden>
+    <span id="hostCount">0</span> hosts &middot;
+    <span id="requestCount">0</span> requests &middot;
+    <span id="duration">0s</span>
+  </section>
+
+  <section class="report" id="reportSection" hidden>
+    <div class="report-actions">
+      <button id="copyBtn">Copy Markdown</button>
+      <button id="downloadBtn">Download .md</button>
+    </div>
+    <textarea id="reportText" readonly spellcheck="false"></textarea>
+  </section>
+
+  <p class="hint" id="hint">Click "Start capture", then browse the site you want to fingerprint. Click "Stop capture" when done to generate the report.</p>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Host Catalog",
+  "version": "1.0.0",
+  "description": "Catalogs every distinct host a site talks to (JS, CSS, API calls, images, fonts, etc.) while capture is running, then exports a Markdown report.",
+  "permissions": ["webRequest", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Host Catalog"
+  }
+}
