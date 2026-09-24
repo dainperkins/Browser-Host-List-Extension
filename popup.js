@@ -7,13 +7,17 @@ const hostCountEl = document.getElementById("hostCount");
 const requestCountEl = document.getElementById("requestCount");
 const durationEl = document.getElementById("duration");
 const reportSection = document.getElementById("reportSection");
-const reportText = document.getElementById("reportText");
+const reportRender = document.getElementById("reportRender");
 const copyBtn = document.getElementById("copyBtn");
 const downloadBtn = document.getElementById("downloadBtn");
+const downloadCsvBtn = document.getElementById("downloadCsvBtn");
+const downloadHostsBtn = document.getElementById("downloadHostsBtn");
 const hint = document.getElementById("hint");
 
 let pollTimer = null;
 let typeLabels = {};
+let currentState = null;
+let currentMarkdown = "";
 
 function send(msg) {
   return chrome.runtime.sendMessage(msg);
@@ -32,6 +36,7 @@ function totalRequests(state) {
 }
 
 function render(state) {
+  currentState = state;
   const hostCount = Object.keys(state.hosts).length;
   const reqCount = totalRequests(state);
 
@@ -53,7 +58,8 @@ function render(state) {
     durationEl.textContent = fmtDuration((state.stoppedAt || Date.now()) - state.startedAt);
     if (hostCount > 0) {
       reportSection.hidden = false;
-      reportText.value = buildMarkdown(state);
+      currentMarkdown = buildMarkdown(state);
+      reportRender.innerHTML = renderMarkdown(currentMarkdown);
       hint.textContent = "Report generated below. Start a new capture to reset.";
     } else {
       hint.textContent = "No requests were captured.";
@@ -76,8 +82,19 @@ function typeLabel(type) {
   return typeLabels[type] || type;
 }
 
+function getHostsSorted(state) {
+  return Object.values(state.hosts).sort((a, b) => b.requestCount - a.requestCount);
+}
+
+function resourceTypesFor(h) {
+  return Object.entries(h.types)
+    .sort((a, b) => b[1] - a[1])
+    .map(([type]) => typeLabel(type))
+    .join(", ");
+}
+
 function buildMarkdown(state) {
-  const hosts = Object.values(state.hosts).sort((a, b) => b.requestCount - a.requestCount);
+  const hosts = getHostsSorted(state);
   const totalReq = totalRequests(state);
   const started = state.startedAt ? new Date(state.startedAt).toISOString() : "unknown";
   const stopped = state.stoppedAt ? new Date(state.stoppedAt).toISOString() : "unknown";
@@ -95,15 +112,106 @@ function buildMarkdown(state) {
   lines.push("| Host | Requests | Resources |");
   lines.push("| --- | --- | --- |");
   for (const h of hosts) {
-    const resourceTypes = Object.entries(h.types)
-      .sort((a, b) => b[1] - a[1])
-      .map(([type]) => typeLabel(type))
-      .join(", ");
-    lines.push(`| \`${h.host}\` | ${h.requestCount} | ${resourceTypes || "—"} |`);
+    lines.push(`| \`${h.host}\` | ${h.requestCount} | ${resourceTypesFor(h) || "—"} |`);
   }
   lines.push("");
 
   return lines.join("\n");
+}
+
+function csvEscape(value) {
+  const str = String(value);
+  if (/[",\n]/.test(str)) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+function buildCSV(state) {
+  const hosts = getHostsSorted(state);
+  const lines = ["Host,Requests,Resources"];
+  for (const h of hosts) {
+    lines.push([csvEscape(h.host), csvEscape(h.requestCount), csvEscape(resourceTypesFor(h))].join(","));
+  }
+  return lines.join("\n");
+}
+
+function buildHostnamesText(state) {
+  return getHostsSorted(state).map((h) => h.host).join("\n");
+}
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function renderInline(text) {
+  return escapeHtml(text)
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+}
+
+function renderTableBlock(tableLines) {
+  const rows = tableLines.map((l) =>
+    l.replace(/^\|/, "").replace(/\|\s*$/, "").split("|").map((c) => c.trim())
+  );
+  const [headerCells, ...rest] = rows;
+  const bodyRows = rest.filter((r) => !r.every((c) => /^:?-+:?$/.test(c)));
+  const thead = `<thead><tr>${headerCells.map((c) => `<th>${renderInline(c)}</th>`).join("")}</tr></thead>`;
+  const tbody = `<tbody>${bodyRows
+    .map((r) => `<tr>${r.map((c) => `<td>${renderInline(c)}</td>`).join("")}</tr>`)
+    .join("")}</tbody>`;
+  return `<table>${thead}${tbody}</table>`;
+}
+
+function renderMarkdown(md) {
+  const lines = md.split("\n");
+  const html = [];
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+
+    if (/^\s*$/.test(line)) {
+      i++;
+      continue;
+    }
+
+    const headingMatch = line.match(/^(#{1,6})\s+(.*)$/);
+    if (headingMatch) {
+      const level = headingMatch[1].length;
+      html.push(`<h${level}>${renderInline(headingMatch[2])}</h${level}>`);
+      i++;
+      continue;
+    }
+
+    if (/^\|.*\|\s*$/.test(line)) {
+      const tableLines = [];
+      while (i < lines.length && /^\|.*\|\s*$/.test(lines[i])) {
+        tableLines.push(lines[i]);
+        i++;
+      }
+      html.push(renderTableBlock(tableLines));
+      continue;
+    }
+
+    if (/^-\s+/.test(line)) {
+      const items = [];
+      while (i < lines.length && /^-\s+/.test(lines[i])) {
+        items.push(lines[i].replace(/^-\s+/, ""));
+        i++;
+      }
+      html.push(`<ul>${items.map((it) => `<li>${renderInline(it)}</li>`).join("")}</ul>`);
+      continue;
+    }
+
+    html.push(`<p>${renderInline(line)}</p>`);
+    i++;
+  }
+  return html.join("\n");
 }
 
 async function refresh() {
@@ -150,23 +258,40 @@ clearBtn.addEventListener("click", async () => {
   }
 });
 
+function downloadFile(content, mime, filename) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function timestamp() {
+  return new Date().toISOString().replace(/[:.]/g, "-");
+}
+
 copyBtn.addEventListener("click", async () => {
-  await navigator.clipboard.writeText(reportText.value);
+  await navigator.clipboard.writeText(currentMarkdown);
   copyBtn.textContent = "Copied!";
   setTimeout(() => (copyBtn.textContent = "Copy Markdown"), 1200);
 });
 
 downloadBtn.addEventListener("click", () => {
-  const blob = new Blob([reportText.value], { type: "text/markdown" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-  a.href = url;
-  a.download = `host-catalog-${stamp}.md`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
+  downloadFile(currentMarkdown, "text/markdown", `host-catalog-${timestamp()}.md`);
+});
+
+downloadCsvBtn.addEventListener("click", () => {
+  if (!currentState) return;
+  downloadFile(buildCSV(currentState), "text/csv", `host-catalog-${timestamp()}.csv`);
+});
+
+downloadHostsBtn.addEventListener("click", () => {
+  if (!currentState) return;
+  downloadFile(buildHostnamesText(currentState), "text/plain", `host-catalog-hosts-${timestamp()}.txt`);
 });
 
 refresh().then(() => {

@@ -60,18 +60,56 @@ button:disabled { opacity: 0.5; cursor: default; }
 
 .report-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   margin-bottom: 6px;
 }
 
-#reportText {
+.report-actions button {
+  flex: 1 1 auto;
+}
+
+.report-render {
   width: 100%;
-  height: 260px;
+  max-height: 320px;
+  overflow: auto;
   box-sizing: border-box;
+  font-size: 12px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.report-render h1 { font-size: 15px; margin: 0 0 8px; }
+.report-render h2 { font-size: 13px; margin: 12px 0 6px; }
+.report-render p { margin: 4px 0; }
+.report-render ul { margin: 4px 0; padding-left: 18px; }
+.report-render li { margin: 2px 0; }
+.report-render code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: #eee;
+  padding: 1px 4px;
+  border-radius: 3px;
   font-size: 11px;
-  padding: 6px;
-  resize: vertical;
+}
+
+.report-render table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 6px 0;
+  font-size: 11px;
+}
+
+.report-render th, .report-render td {
+  border: 1px solid #ddd;
+  padding: 4px 6px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.report-render th {
+  background: #eee;
 }
 
 .hint {

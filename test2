@@ -1,0 +1,71 @@
+# Host Catalog Report
+
+- **Captured:** 2026-09-21T15:46:36.399Z → 2026-09-21T15:47:04.829Z (28s)
+- **Distinct hosts:** 61
+- **Total requests observed:** 576
+
+## Hosts
+
+| Host | Requests | Resources |
+| --- | --- | --- |
+| `snyk.io` | 197 | JavaScript, API call (XHR/Fetch), Other, Image, Font, CSS, Page navigation |
+| `support.snyk.io` | 41 | API call (XHR/Fetch), JavaScript, Image, CSS, Other, Page navigation |
+| `b.6sc.co` | 39 | Image |
+| `res.cloudinary.com` | 32 | Image, Font, Media |
+| `app.qualified.com` | 20 | API call (XHR/Fetch), Ping/Beacon, Iframe |
+| `www.google.com` | 17 | API call (XHR/Fetch), Image |
+| `trackingapi.trendemon.com` | 16 | JavaScript, Image |
+| `fonts.gstatic.com` | 14 | Font |
+| `insight.adsrvr.org` | 11 | Iframe, API call (XHR/Fetch) |
+| `bat.bing.com` | 10 | Image, Ping/Beacon, JavaScript |
+| `ws.zoominfo.com` | 10 | API call (XHR/Fetch) |
+| `evo.snyk.io` | 9 | API call (XHR/Fetch) |
+| `js.adsrvr.org` | 9 | JavaScript |
+| `web.cmp.usercentrics.eu` | 9 | JavaScript, Iframe |
+| `px.ads.linkedin.com` | 8 | API call (XHR/Fetch), Image |
+| `analytics.google.com` | 7 | API call (XHR/Fetch) |
+| `js.qualified.com` | 7 | JavaScript, Font, Media |
+| `analytics.twitter.com` | 6 | Image |
+| `app.datadoghq.com` | 6 | API call (XHR/Fetch), Ping/Beacon, WebSocket |
+| `js.zi-scripts.com` | 6 | API call (XHR/Fetch), JavaScript |
+| `tags.srv.stackadapt.com` | 6 | API call (XHR/Fetch), JavaScript, CSS |
+| `v1.api.service.cmp.usercentrics.eu` | 6 | API call (XHR/Fetch) |
+| `www.googletagmanager.com` | 6 | JavaScript |
+| `17531277.fls.doubleclick.net` | 5 | Iframe |
+| `adservice.google.com` | 5 | Image |
+| `assets.qualified.com` | 5 | Font, Media, JavaScript, CSS |
+| `play.google.com` | 5 | API call (XHR/Fetch), Ping/Beacon |
+| `t.co` | 5 | Image |
+| `677-thp-415.mktoresp.com` | 4 | Ping/Beacon |
+| `a.usbrowserspeed.com` | 3 | JavaScript |
+| `alb.reddit.com` | 3 | API call (XHR/Fetch) |
+| `bzr.openai.com` | 3 | API call (XHR/Fetch) |
+| `googleads.g.doubleclick.net` | 3 | JavaScript |
+| `ipv6.6sc.co` | 3 | API call (XHR/Fetch) |
+| `messenger-assets.qualified.com` | 3 | Image |
+| `snyk.statuspage.io` | 3 | API call (XHR/Fetch) |
+| `bzrcdn.openai.com` | 2 | JavaScript, API call (XHR/Fetch) |
+| `contacts.google.com` | 2 | API call (XHR/Fetch) |
+| `fonts.googleapis.com` | 2 | CSS |
+| `graphql.usercentrics.eu` | 2 | API call (XHR/Fetch) |
+| `j.6sc.co` | 2 | JavaScript |
+| `munchkin.marketo.net` | 2 | JavaScript |
+| `s.yimg.com` | 2 | JavaScript, API call (XHR/Fetch) |
+| `secure.adnxs.com` | 2 | API call (XHR/Fetch) |
+| `sp.analytics.yahoo.com` | 2 | Image |
+| `ad.doubleclick.net` | 1 | API call (XHR/Fetch) |
+| `app.usercentrics.eu` | 1 | Image |
+| `assets.trendemon.com` | 1 | JavaScript |
+| `cdn.jsdelivr.net` | 1 | JavaScript |
+| `chat.google.com` | 1 | API call (XHR/Fetch) |
+| `o209747.ingest.us.sentry.io` | 1 | API call (XHR/Fetch) |
+| `pixel-config.reddit.com` | 1 | API call (XHR/Fetch) |
+| `scout-cdn.salesloft.com` | 1 | JavaScript |
+| `snap.licdn.com` | 1 | JavaScript |
+| `ssl.gstatic.com` | 1 | API call (XHR/Fetch) |
+| `static.ads-twitter.com` | 1 | JavaScript |
+| `static.cloudflareinsights.com` | 1 | JavaScript |
+| `uct.service.usercentrics.eu` | 1 | Image |
+| `waa-pa.clients6.google.com` | 1 | API call (XHR/Fetch) |
+| `ws8.qualified.com` | 1 | WebSocket |
+| `www.redditstatic.com` | 1 | JavaScript |
