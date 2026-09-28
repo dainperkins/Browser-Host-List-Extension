@@ -14,15 +14,17 @@ A Chrome extension that catalogs every distinct host a site talks to while you b
 1. Open `chrome://extensions`.
 2. Enable "Developer mode" (top right).
 3. Click "Load unpacked" and select this `host-catalog-extension` folder.
-4. Pin the extension for easy access.
+4. Enable Incognito modes for this extension
+5. Pin the extension for easy access.
 
 ## Usage
 
-1. Click the extension icon, then **Start capture**.
-2. Browse the site (navigate pages, trigger the flows you care about — login, search, checkout, etc.).
-3. Click **Stop capture**.
-4. The popup renders a Markdown report: a summary table of hosts plus a per-host breakdown of what was accessed there. Use **Copy Markdown** or **Download .md**.
-5. **Clear** resets the catalog for a fresh run.
+1. Open a new Incognito window
+2. Click the extension icon, then **Start capture**.
+3. Browse the site (navigate pages, trigger the flows you care about — login, search, checkout, etc.).
+4. Click **Stop capture**.
+5. The popup renders a Markdown report: a summary table of hosts plus a per-host breakdown of what was accessed there. Use **Copy Markdown** or **Download .md**.
+6. **Clear** resets the catalog for a fresh run.
 
 ## Notes
 
